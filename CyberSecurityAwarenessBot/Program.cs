@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Speech.Synthesis;
+using System.Speech.Synthesis;  //For text-to-speech functionality
 
 namespace CyberSecurityAwarenessBot
 {
@@ -7,79 +7,86 @@ namespace CyberSecurityAwarenessBot
     {
         static void Main(string[] args)
         {
-            // Set up the tool that turns text into speech
+            // Initialize text-to-speech engine for the greeting only
             SpeechSynthesizer synth = new SpeechSynthesizer();
-            synth.Volume = 100; // Make the voice as loud as possible
-            synth.Rate = 0; // Keep the speaking speed normal
+            synth.SetOutputToDefaultAudioDevice();  // Use default audio output
+            synth.Volume = 100;  // Maximum volume
+            synth.Rate = 0;  // Normal speech rate
 
-            // Create a welcome message for the bot to say out loud
-            string welcomeMessage = "Hello! Welcome to the Cybersecurity Awareness Bot. I'm here to help you stay safe online";
-            synth.Speak(welcomeMessage); // Make the bot say the welcome message
+            // Welcome message that will be spoken aloud
+            string welcomeMessage = "Hello! Welcome to the Cybersecurity Awareness Bot. I'm here to help you stay safe online!";
+            synth.Speak(welcomeMessage);  // Speak the welcome message
 
-            // Show ASCII design in the console
+            // Display enhanced ASCII art with color for visual appeal
+            Console.ForegroundColor = ConsoleColor.Yellow;  // Set text color to yellow
             Console.WriteLine(@"
-  ┌───────┐ 
-  │  _ _  │
-  │       │
-  │   -   │
-  └───────┘ 
-  |       |
-  |       |
+     ╔════════════════════════════╗
+     ║  🤖 CyberSec Awareness Bot ║
+     ╚════════════════════════════╝
+               [ ]  [ ]  
+               |  --  |
+                \____/  
+              /|      |\
+             / |      | \  
+            (  |______|  ) 
             ");
+            Console.ResetColor();  // Reset to default text color
 
-            // Say hi to the user and ask for their name
+            // Get user's name for personalized interaction
             Console.WriteLine("Welcome to the Cybersecurity Awareness Bot!");
             Console.Write("Please enter your name: ");
             string userName = Console.ReadLine();
-            if (string.IsNullOrWhiteSpace(userName)) userName = "User"; // If user don’t type a name, call them "User"
 
-            // Change the text color to yellow for these lines
+            // Default to "User" if no name is provided
+            if (string.IsNullOrWhiteSpace(userName)) userName = "User";
+
+            // Display introduction and available topics
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"Hello, {userName}! I'm here to help you with cybersecurity awareness.");
-            Console.WriteLine("You can ask me about password safety, phishing, safe browsing, what is my purpose or general questions like 'How are you?' or Quit/Exit");
-            Console.ResetColor(); // Switch the text color back to normal
+            Console.WriteLine("You can ask me about:\n- Password safety\n- Phishing\n- Safe browsing\n- What is my purpose\n- General questions like 'How are you?'\n- Or type 'Quit' to exit");
+            Console.ResetColor();
+            Console.WriteLine(new string('-', 50));  // Visual separator
 
-            Console.WriteLine(new string('-', 50)); // Draw a line to separate things
-
-            // Start a loop to keep talking to the user
+            // Main interaction loop
             while (true)
             {
-                // Change the text color to cyan for the user’s input
+                // Prompt for user input
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write($"{userName}: "); // Show the user’s name and wait for their question
-                string input = Console.ReadLine()?.ToLower(); // Get what they type and make it all lowercase
+                Console.Write($"{userName}: ");
+                string input = Console.ReadLine()?.ToLower();  // Read input and convert to lowercase
+                Console.ResetColor();
 
-                // If they didn’t type anything, tell them to ask something
+                // Handle empty input
                 if (string.IsNullOrWhiteSpace(input))
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Please ask me a question.");
+                    Console.WriteLine("Oops! You forgot to type something. Try again!");
                     Console.ResetColor();
                     Console.WriteLine(new string('-', 50));
-                    continue; // Go back to the start of the loop
+                    continue;  // Skip to next iteration
                 }
 
-                // If they say "exit" or "quit," say goodbye and stop the program
-                if (input.Contains("exit") || input.Contains("quit"))
+                // Exit condition
+                if (input.Equals("exit", StringComparison.OrdinalIgnoreCase) || input.Equals("quit", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Goodbye! Stay safe online.");
+                    Console.WriteLine("Goodbye! Stay safe online, and don't click suspicious links! 😉");
                     Console.ResetColor();
-                    break; // Stop the loop and end the program
+                    break;  // Exit the loop
                 }
 
-                // Change the text color to yellow and give an answer
+                // Get and display response based on user input
+                string response = GetResponse(input);
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                string response = GetResponse(input); // Get the bot’s answer based on what the user asked
-                Console.WriteLine($"Bot: {response}"); // Show the bot’s answer
+                Console.WriteLine($"Bot: {response}");
                 Console.ResetColor();
-                Console.WriteLine(new string('-', 50)); // Draw another line
+                Console.WriteLine(new string('-', 50));  // Visual separator
             }
         }
 
-        // This part figures out what to say based on the user’s question
         static string GetResponse(string input)
         {
+            // Check for different keywords in the input and return appropriate responses
             if (input.Contains("how are you"))
                 return "I'm a bot, so I'm always doing great and ready to assist you with cybersecurity tips!";
             else if (input.Contains("what is your purpose"))
@@ -87,13 +94,13 @@ namespace CyberSecurityAwarenessBot
             else if (input.Contains("what can i ask"))
                 return "Feel free to ask me about password safety, phishing scams, safe browsing habits, or anything else related to staying secure online!";
             else if (input.Contains("password"))
-                return "A strong password should be at least 12 characters long and include a mix of uppercase letters, lowercase letters, numbers, and special symbols. Never use personal information like your name or birthday, as it’s easy to guess.";
+                return "A strong password should be at least 12 characters long and include a mix of uppercase letters, lowercase letters, numbers, and special symbols. Never use personal information like your name or birthday, as it's easy to guess.";
             else if (input.Contains("phishing"))
-                return "Phishing is a cyberattack where scammers pretend to be trustworthy sources to trick you into sharing sensitive information, like passwords or credit card details. Always verify the sender’s identity and avoid clicking on suspicious links or attachments.";
+                return "Phishing is a cyberattack where scammers pretend to be trustworthy sources to trick you into sharing sensitive information, like passwords or credit card details. Always verify the sender's identity and avoid clicking on suspicious links or attachments.";
             else if (input.Contains("safe browsing"))
                 return "To browse safely, stick to websites with 'HTTPS' in the URL, keep your browser and security software up to date, and avoid downloading files or clicking links from untrusted sources.";
             else
-                return "Hmm, I didn’t quite catch that. Could you please rephrase your question? I’d love to help!";
+                return "Hmm, I didn't quite catch that. Could you please rephrase your question? I'd love to help!";
         }
     }
 }
