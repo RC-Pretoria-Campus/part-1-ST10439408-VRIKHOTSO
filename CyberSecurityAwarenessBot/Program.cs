@@ -70,7 +70,7 @@ namespace CyberSecurityAwarenessBot
                 if (input.Equals("exit", StringComparison.OrdinalIgnoreCase) || input.Equals("quit", StringComparison.OrdinalIgnoreCase))
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Goodbye! Stay safe online, and don't click suspicious links! 😉");
+                    Console.WriteLine("Goodbye! Stay safe online, and don't click suspicious links!");
                     Console.ResetColor();
                     break;  // Exit the loop
                 }
