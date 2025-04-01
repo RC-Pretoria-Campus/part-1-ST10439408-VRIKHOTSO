@@ -21,7 +21,7 @@ namespace CyberSecurityAwarenessBot
             Console.ForegroundColor = ConsoleColor.Yellow;  // Set text color to yellow
             Console.WriteLine(@"
      ╔════════════════════════════╗
-     ║  🤖 CyberSec Awareness Bot ║
+     ║  CyberSecurityAwarenessBot ║
      ╚════════════════════════════╝
                [ ]  [ ]  
                |  --  |
