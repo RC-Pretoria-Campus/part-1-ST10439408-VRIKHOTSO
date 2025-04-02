@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Speech.Synthesis;  //For text-to-speech functionality
+using System.Speech.Synthesis;  // For text-to-speech functionality
 
 namespace CyberSecurityAwarenessBot
 {
@@ -7,18 +7,25 @@ namespace CyberSecurityAwarenessBot
     {
         static void Main(string[] args)
         {
-            // Initialize text-to-speech engine for the greeting only
+            InitializeBot(); //Calls method to set up the bot with greeting and visuals
+            string userName = GetUserName(); //gets and store the username
+            MainLoop(userName);
+        }
+
+        // Initializes the bot with a voice greeting and displays ASCII art
+        static void InitializeBot()
+        {
             SpeechSynthesizer synth = new SpeechSynthesizer();
-            synth.SetOutputToDefaultAudioDevice();  // Use default audio output
-            synth.Volume = 100;  // Maximum volume
-            synth.Rate = 0;  // Normal speech rate
+            synth.SetOutputToDefaultAudioDevice();
+            synth.Volume = 100; //Set the  volume to maximum
+            synth.Rate = 0; // Speak on a normal rate
+            string welcomeMessage = "Hello! Welcome to the Cybersecurity Awareness Bot. I'm here to help you stay safe online!"; 
+            synth.Speak(welcomeMessage);
 
-            // Welcome message that will be spoken aloud
-            string welcomeMessage = "Hello! Welcome to the Cybersecurity Awareness Bot. I'm here to help you stay safe online!";
-            synth.Speak(welcomeMessage);  // Speak the welcome message
-
-            // Display enhanced ASCII art with color for visual appeal
-            Console.ForegroundColor = ConsoleColor.Yellow;  // Set text color to yellow
+            // Enhanced ASCII art with colored borders for visual appeal
+            Console.ForegroundColor = ConsoleColor.White; //Sets console colour white
+            Console.WriteLine(new string('-', 50)); //Sets - 50 white line
+            Console.ForegroundColor = ConsoleColor.Yellow; //Changes console colour to yellow
             Console.WriteLine(@"
      ╔════════════════════════════╗
      ║  CyberSecurityAwarenessBot ║
@@ -29,61 +36,65 @@ namespace CyberSecurityAwarenessBot
               /|      |\
              / |      | \  
             (  |______|  ) 
-            ");
-            Console.ResetColor();  // Reset to default text color
-
-            // Get user's name for personalized interaction
-            Console.WriteLine("Welcome to the Cybersecurity Awareness Bot!");
-            Console.Write("Please enter your name: ");
-            string userName = Console.ReadLine();
-
-            // Default to "User" if no name is provided
-            if (string.IsNullOrWhiteSpace(userName)) userName = "User";
-
-            // Display introduction and available topics
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine($"Hello, {userName}! I'm here to help you with cybersecurity awareness.");
-            Console.WriteLine("You can ask me about:\n- Password safety\n- Phishing\n- Safe browsing\n- What is my purpose\n- General questions like 'How are you?'\n- Or type 'Quit' to exit");
+    ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(new string('-', 50));
             Console.ResetColor();
-            Console.WriteLine(new string('-', 50));  // Visual separator
+        }
 
-            // Main interaction loop
+        // Prompts the user for their name and returns it (formatted)
+        static string GetUserName() //Method to get user name
+        {
+            Console.WriteLine("Welcome to the Cybersecurity Awareness Bot!"); //Display welcome text
+            Console.Write("Please enter your name: "); // Prompt user for their name
+            string userName = Console.ReadLine()?.Trim(); // Reads inputs and remove extra spaces
+            if (string.IsNullOrWhiteSpace(userName)) userName = "User";
+            else userName = char.ToUpper(userName[0]) + userName.Substring(1).ToLower();
+            return userName;
+        }
+
+        // Handles the main interaction loop with the user
+        static void MainLoop(string userName) //Method for the main user interaction loop
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"Hello, {userName}! I'm here to help you with cybersecurity awareness."); // Greets user by name
+            Console.WriteLine("You can ask me about:\n- Password safety\n- Phishing\n- Safe browsing\n- Or type 'help' for a list of topics\n- Type 'quit' to exit");
+            Console.ResetColor();
+            Console.WriteLine(new string('-', 50));
+
             while (true)
             {
-                // Prompt for user input
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.Write($"{userName}: ");
-                string input = Console.ReadLine()?.ToLower();  // Read input and convert to lowercase
+                Console.Write($"{userName}: "); //Displays prompts with user's name
+                string input = Console.ReadLine()?.ToLower().Trim(); //Reads the user input, converts to lowecase and trims spaces
                 Console.ResetColor();
 
-                // Handle empty input
-                if (string.IsNullOrWhiteSpace(input))
+                if (string.IsNullOrWhiteSpace(input)) //Checks if the input is empty or just whitespace
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Oops! You forgot to type something. Try again!");
                     Console.ResetColor();
                     Console.WriteLine(new string('-', 50));
-                    continue;  // Skip to next iteration
+                    continue; //Skips to the next loop inteaction
                 }
 
-                // Exit condition
-                if (input.Equals("exit", StringComparison.OrdinalIgnoreCase) || input.Equals("quit", StringComparison.OrdinalIgnoreCase))
+                if (input == "quit" || input == "exit")
                 {
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Goodbye! Stay safe online, and don't click suspicious links!");
+                    Console.WriteLine("Goodbye! Stay safe online, and remember, I'm just a bot, but I'm always here to help!");
                     Console.ResetColor();
-                    break;  // Exit the loop
+                    break; // Exits the loop 
                 }
 
-                // Get and display response based on user input
                 string response = GetResponse(input);
                 Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Bot: {response}");
-                Console.ResetColor();
-                Console.WriteLine(new string('-', 50));  // Visual separator
+                Console.WriteLine($"Bot: {response}"); //Displays the bot response
+                Console.ResetColor(); //Resets console colour to default
+                Console.WriteLine(new string('-', 50));
             }
         }
 
+        // Returns a response based on the user's input
         static string GetResponse(string input)
         {
             // Check for different keywords in the input and return appropriate responses
